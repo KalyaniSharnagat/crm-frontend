@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Search, Filter, Eye, Edit, Trash2, Phone, Mail, Calendar, CheckCircle, XCircle } from 'lucide-react';
+import { Eye, Edit, PlusCircle, FileText, Plus } from 'lucide-react';
 
 interface Lead {
   id: number;
@@ -7,15 +7,16 @@ interface Lead {
   email: string;
   phone: string;
   company: string;
-  status: 'new' | 'contacted' | 'qualified' | 'positive' | 'negative' | 'converted';
+  status: 'new' | 'positive';
   source: string;
-  value: number;
-  lastContact: string;
-  followUpDate: string;
-  notes: string;
+  lastFollowUp: string;
 }
 
-export default function LeadManagement() {
+interface LeadManagementProps {
+  setActiveTab: (tab: string) => void;
+}
+
+export default function LeadManagement({ setActiveTab }: LeadManagementProps) {
   const [leads, setLeads] = useState<Lead[]>([
     {
       id: 1,
@@ -25,10 +26,7 @@ export default function LeadManagement() {
       company: 'Tech Corp',
       status: 'positive',
       source: 'Website',
-      value: 5000,
-      lastContact: '2024-01-15',
-      followUpDate: '2024-01-20',
-      notes: 'Interested in premium package'
+      lastFollowUp: '2024-01-15',
     },
     {
       id: 2,
@@ -36,199 +34,293 @@ export default function LeadManagement() {
       email: 'sarah@example.com',
       phone: '+1-555-0124',
       company: 'Design Studio',
-      status: 'qualified',
-      source: 'Referral',
-      value: 3000,
-      lastContact: '2024-01-14',
-      followUpDate: '2024-01-18',
-      notes: 'Needs custom solution'
-    },
-    {
-      id: 3,
-      name: 'Mike Davis',
-      email: 'mike@example.com',
-      phone: '+1-555-0125',
-      company: 'Marketing Inc',
       status: 'new',
-      source: 'LinkedIn',
-      value: 7500,
-      lastContact: '2024-01-16',
-      followUpDate: '2024-01-19',
-      notes: 'Initial inquiry about services'
-    }
+      source: 'Referral',
+      lastFollowUp: '2024-01-18',
+    },
   ]);
 
-  const [showAddForm, setShowAddForm] = useState(false);
   const [selectedLead, setSelectedLead] = useState<Lead | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [showFormModal, setShowFormModal] = useState(false);
+  const [editLead, setEditLead] = useState<Lead | null>(null);
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'new': return 'bg-gray-500';
-      case 'contacted': return 'bg-blue-500';
-      case 'qualified': return 'bg-yellow-500';
-      case 'positive': return 'bg-green-500';
-      case 'negative': return 'bg-red-500';
-      case 'converted': return 'bg-purple-500';
-      default: return 'bg-gray-500';
+  const [formData, setFormData] = useState<Omit<Lead, "id" | "lastFollowUp">>({
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    source: "Website",
+    status: "new",
+  });
+
+  const updateLeadStatus = (id: number, newStatus: Lead['status']) => {
+    setLeads(leads.map(lead => lead.id === id ? { ...lead, status: newStatus } : lead));
+  };
+
+  const handleAddLead = () => {
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      company: "",
+      source: "Website",
+      status: "new",
+    });
+    setEditLead(null);
+    setShowFormModal(true);
+  };
+
+  const handleEditLead = (lead: Lead) => {
+    setFormData({
+      name: lead.name,
+      email: lead.email,
+      phone: lead.phone,
+      company: lead.company,
+      source: lead.source,
+      status: lead.status,
+    });
+    setEditLead(lead);
+    setShowFormModal(true);
+  };
+
+  const handleSaveLead = () => {
+    if (editLead) {
+      setLeads(leads.map(l => l.id === editLead.id ? { ...editLead, ...formData, lastFollowUp: l.lastFollowUp } : l));
+    } else {
+      const newLead: Lead = {
+        id: leads.length + 1,
+        ...formData,
+        lastFollowUp: new Date().toISOString().split("T")[0],
+      };
+      setLeads([...leads, newLead]);
     }
+    setShowFormModal(false);
   };
-
-  const updateLeadStatus = (leadId: number, newStatus: Lead['status']) => {
-    setLeads(leads.map(lead => 
-      lead.id === leadId ? { ...lead, status: newStatus } : lead
-    ));
-  };
-
-  const filteredLeads = leads.filter(lead =>
-    lead.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lead.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    lead.company.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   return (
     <div className="space-y-6">
-      {/* Action Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-gray-800">Lead Management</h2>
-          <p className="text-gray-600 mt-1">Manage your leads and track follow-ups</p>
+          <p className="text-gray-600 mt-1">Create, edit and manage Leads</p>
         </div>
         <button
-          onClick={() => setShowAddForm(true)}
+          onClick={handleAddLead}
           className="bg-teal-600 text-white px-6 py-3 rounded-xl hover:bg-teal-700 transition-colors flex items-center space-x-2 font-medium"
         >
           <Plus size={20} />
-          <span>Add New Lead</span>
+          <span>Add Lead</span>
         </button>
       </div>
 
-      {/* Search and Filter */}
-      <div className="bg-white/40 backdrop-blur-md rounded-2xl p-6 border border-white/40">
-        <div className="flex items-center space-x-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <input
-              type="text"
-              placeholder="Search leads by name, email, or company..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 bg-white/50 border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-          </div>
-          <button className="bg-white/50 border border-white/30 px-4 py-3 rounded-xl hover:bg-white/70 transition-colors flex items-center space-x-2">
-            <Filter size={20} />
-            <span>Filter</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Leads Table */}
+      {/* Table */}
       <div className="bg-white/40 backdrop-blur-md rounded-2xl border border-white/40 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-white/20">
-              <tr>
-                <th className="px-6 py-4 text-left font-semibold text-gray-800">Lead</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-800">Company</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-800">Status</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-800">Value</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-800">Follow-up</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-800">Actions</th>
+        <table className="w-full">
+          <thead className="bg-white/20 text-lg">
+            <tr>
+              <th className="px-6 py-3 text-left font-semibold text-gray-700">Name</th>
+              <th className="px-6 py-3 text-left font-semibold text-gray-700">Company</th>
+              <th className="px-6 py-3 text-left font-semibold text-gray-700">Contact No</th>
+              <th className="px-6 py-3 text-left font-semibold text-gray-700">Email</th>
+              <th className="px-6 py-3 text-left font-semibold text-gray-700">Source</th>
+              <th className="px-6 py-3 text-left font-semibold text-gray-700">Last Follow-up</th>
+              <th className="px-6 py-3 text-left font-semibold text-gray-700">Status</th>
+              <th className="px-6 py-3 text-left font-semibold text-gray-700">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y">
+            {leads.map((lead) => (
+              <tr key={lead.id} className="hover:bg-gray-50">
+                <td className="px-6 py-3">{lead.name}</td>
+                <td className="px-6 py-3">{lead.company}</td>
+                <td className="px-6 py-3">{lead.phone}</td>
+                <td className="px-6 py-3">{lead.email}</td>
+                <td className="px-6 py-3">{lead.source}</td>
+                <td className="px-6 py-3">{lead.lastFollowUp}</td>
+                <td className="px-6 py-3">
+                  <select
+                    value={lead.status}
+                    onChange={(e) => updateLeadStatus(lead.id, e.target.value as Lead['status'])}
+                    className="px-3 py-2 text-sm font-medium rounded-lg border border-gray-300 bg-gray-50 text-gray-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 hover:border-teal-400 transition-all"
+                  >
+                    <option value="new">🟠 New</option>
+                    <option value="positive">🟢 Positive</option>
+                  </select>
+                </td>
+
+                <td className="px-6 py-3">
+                  <div className="flex items-center space-x-2">
+                    <button
+                      className="text-blue-600 hover:text-blue-800"
+                      onClick={() => setSelectedLead(lead)}
+                    >
+                      <Eye size={18} />
+                    </button>
+                    <button
+                      className="text-green-600 hover:text-green-800"
+                      onClick={() => handleEditLead(lead)}
+                    >
+                      <Edit size={18} />
+                    </button>
+
+                    {/* Add Follow-up */}
+                    {lead.status === 'new' && (
+                      <div className="relative group">
+                        <button
+                          className="text-orange-600 hover:text-orange-800"
+                          onClick={() => setActiveTab('follow')}
+                        >
+                          <PlusCircle size={18} />
+                        </button>
+                        <span className="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-orange-600 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                          Add Follow-up
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Generate Quotation */}
+                    {lead.status === 'positive' && (
+                      <div className="relative group">
+                        <button
+                          className="text-purple-600 hover:text-purple-800"
+                          onClick={() => setActiveTab('quotations')} // Redirect to Quotations tab
+                        >
+                          <FileText size={18} />
+                        </button>
+                        <span className="absolute top-full mt-1 left-1/2 -translate-x-1/2 bg-purple-600 text-white text-xs rounded px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                          Generate Quotation
+                        </span>
+                      </div>
+                    )}
+
+                  </div>
+                </td>
               </tr>
-            </thead>
-            <tbody className="divide-y divide-white/20">
-              {filteredLeads.map((lead) => (
-                <tr key={lead.id} className="hover:bg-white/20 transition-colors">
-                  <td className="px-6 py-4">
-                    <div>
-                      <p className="font-semibold text-gray-800">{lead.name}</p>
-                      <p className="text-sm text-gray-600">{lead.email}</p>
-                      <p className="text-sm text-gray-600">{lead.phone}</p>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="font-medium text-gray-800">{lead.company}</p>
-                    <p className="text-sm text-gray-600">{lead.source}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center space-x-2">
-                      <div className={`w-3 h-3 rounded-full ${getStatusColor(lead.status)}`}></div>
-                      <span className="capitalize font-medium text-gray-800">{lead.status}</span>
-                    </div>
-                    <div className="mt-2 space-x-1">
-                      {lead.status !== 'positive' && (
-                        <button
-                          onClick={() => updateLeadStatus(lead.id, 'positive')}
-                          className="bg-green-500 text-white px-2 py-1 rounded text-xs hover:bg-green-600 transition-colors"
-                        >
-                          Mark Positive
-                        </button>
-                      )}
-                      {lead.status !== 'negative' && (
-                        <button
-                          onClick={() => updateLeadStatus(lead.id, 'negative')}
-                          className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600 transition-colors"
-                        >
-                          Mark Negative
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="font-bold text-gray-800">${lead.value.toLocaleString()}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <p className="text-sm text-gray-800">{lead.followUpDate}</p>
-                    <p className="text-xs text-gray-600">Last: {lead.lastContact}</p>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center space-x-2">
-                      <button className="text-blue-600 hover:text-blue-800 p-1">
-                        <Eye size={16} />
-                      </button>
-                      <button className="text-green-600 hover:text-green-800 p-1">
-                        <Edit size={16} />
-                      </button>
-                      <button className="text-teal-600 hover:text-teal-800 p-1">
-                        <Phone size={16} />
-                      </button>
-                      <button className="text-purple-600 hover:text-purple-800 p-1">
-                        <Mail size={16} />
-                      </button>
-                      {lead.status === 'positive' && (
-                        <button className="bg-teal-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-teal-700 transition-colors font-medium">
-                          Generate Quote
-                        </button>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
 
-      {/* Lead Statistics */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white/40 backdrop-blur-md rounded-2xl p-6 border border-white/40 text-center">
-          <div className="text-3xl font-bold text-blue-600">{leads.filter(l => l.status === 'new').length}</div>
-          <div className="text-gray-700 font-medium mt-2">New Leads</div>
+      {/* View Details Modal */}
+      {selectedLead && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center animate-fadeIn z-50">
+          <div className="bg-white rounded-2xl w-[500px] shadow-2xl border border-gray-300">
+            <div className="bg-gradient-to-r from-teal-600 to-teal-500 px-6 py-4 border-b border-gray-200">
+              <h3 className="text-2xl font-bold text-white">📝 Lead Details</h3>
+              <p className="text-xs text-teal-100 mt-1">Complete information about the lead</p>
+            </div>
+            <div className="p-6 bg-white grid grid-cols-2 gap-4 text-gray-700">
+              <p><strong>Name:</strong> {selectedLead.name}</p>
+              <p><strong>Email:</strong> {selectedLead.email}</p>
+              <p><strong>Phone:</strong> {selectedLead.phone}</p>
+              <p><strong>Company:</strong> {selectedLead.company}</p>
+              <p><strong>Status:</strong> {selectedLead.status}</p>
+              <p><strong>Source:</strong> {selectedLead.source}</p>
+              <p><strong>Last Follow-up:</strong> {selectedLead.lastFollowUp}</p>
+            </div>
+            <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end">
+              <button
+                onClick={() => setSelectedLead(null)}
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="bg-white/40 backdrop-blur-md rounded-2xl p-6 border border-white/40 text-center">
-          <div className="text-3xl font-bold text-yellow-600">{leads.filter(l => l.status === 'qualified').length}</div>
-          <div className="text-gray-700 font-medium mt-2">Qualified</div>
+      )}
+
+      {/* Add/Edit Modal */}
+      {showFormModal && (
+        <div className="fixed inset-0 bg-black/40 rounded-2xl backdrop-blur-sm flex items-center justify-center animate-fadeIn">
+          <div className="bg-white w-[700px] shadow-2xl border border-gray-300">
+            <div className="bg-gradient-to-r from-teal-600 to-teal-500  px-6 py-4 border-b border-gray-200">
+              <h3 className="text-2xl font-bold text-white">{editLead ? " Edit Lead" : " Add Lead"}</h3>
+              <p className="text-xs text-teal-100 mt-1">Fill in the details below to continue</p>
+            </div>
+            <div className="p-6 space-y-4 bg-white">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <input
+                  type="text"
+                  placeholder="Enter full name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input
+                  type="email"
+                  placeholder="Enter email address"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                <input
+                  type="text"
+                  placeholder="+91 XXXXX XXXXX"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
+                <input
+                  type="text"
+                  placeholder="Company name"
+                  value={formData.company}
+                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                  className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Lead Source</label>
+                <select
+                  value={formData.source}
+                  onChange={(e) => setFormData({ ...formData, source: e.target.value })}
+                  className="w-full border border-gray-300 px-3 py-2 bg-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+                >
+                  <option value="Website">🌐 Website</option>
+                  <option value="Referral">🤝 Referral</option>
+                  <option value="Cold Call">📞 Cold Call</option>
+                  <option value="LinkedIn">💼 LinkedIn</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select
+                  value={formData.status}
+                  onChange={(e) => setFormData({ ...formData, status: e.target.value as Lead['status'] })}
+                  className="w-full border border-gray-300 px-3 py-2 bg-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+                >
+                  <option value="new">🟠 New</option>
+                  <option value="positive">🟢 Positive</option>
+                </select>
+              </div>
+            </div>
+            <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end space-x-3">
+              <button
+                onClick={() => setShowFormModal(false)}
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveLead}
+                className="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold shadow-sm"
+              >
+                Save
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="bg-white/40 backdrop-blur-md rounded-2xl p-6 border border-white/40 text-center">
-          <div className="text-3xl font-bold text-green-600">{leads.filter(l => l.status === 'positive').length}</div>
-          <div className="text-gray-700 font-medium mt-2">Positive</div>
-        </div>
-        <div className="bg-white/40 backdrop-blur-md rounded-2xl p-6 border border-white/40 text-center">
-          <div className="text-3xl font-bold text-purple-600">{leads.filter(l => l.status === 'converted').length}</div>
-          <div className="text-gray-700 font-medium mt-2">Converted</div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

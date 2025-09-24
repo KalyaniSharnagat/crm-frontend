@@ -5,7 +5,9 @@ import Dashboard from './components/Dashboard';
 import LeadManagement from './components/LeadManagement';
 import QuotationManager from './components/QuotationManager';
 import StatusTracking from './components/StatusTracking';
-import FollowUpRecords from './components/FollowUpRecords';
+import FollowUpData from './components/FollowUpData';
+
+
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -15,12 +17,16 @@ function App() {
       case 'dashboard':
         return <Dashboard />;
       case 'leads':
-        return <LeadManagement />;
-         case 'follow':
-        return <FollowUpRecords />;
+        return <LeadManagement setActiveTab={setActiveTab} />;
+        case 'follow':
+        return <FollowUpData/>;
       case 'quotations':
         return <QuotationManager />;
       case 'status':
+        return <StatusTracking />;
+         case 'Payment':
+        return <StatusTracking />;
+         case 'settings':
         return <StatusTracking />;
       default:
         return <Dashboard />;

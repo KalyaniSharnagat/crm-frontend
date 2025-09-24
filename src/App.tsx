@@ -6,10 +6,10 @@ import LeadManagement from './components/LeadManagement';
 import QuotationManager from './components/QuotationManager';
 import StatusTracking from './components/StatusTracking';
 import FollowUpData from './components/FollowUpData';
-
-
+import Login from './login/Login';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
 
   const renderContent = () => {
@@ -18,21 +18,25 @@ function App() {
         return <Dashboard />;
       case 'leads':
         return <LeadManagement setActiveTab={setActiveTab} />;
-        case 'follow':
-        return <FollowUpData/>;
+      case 'follow':
+        return <FollowUpData />;
       case 'quotations':
         return <QuotationManager />;
       case 'status':
-        return <StatusTracking />;
-         case 'Payment':
-        return <StatusTracking />;
-         case 'settings':
+      case 'Payment':
+      case 'settings':
         return <StatusTracking />;
       default:
         return <Dashboard />;
     }
   };
 
+  // अगर login नहीं है तो Login page दिखाओ
+  if (!isLoggedIn) {
+    return <Login onLogin={() => setIsLoggedIn(true)} />;
+  }
+
+  // Login के बाद Dashboard UI दिखेगा
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#E1F3F3] to-[#C6E0E0]">
       <div className="flex h-screen">

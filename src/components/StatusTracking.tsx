@@ -1,126 +1,126 @@
-import React, { useState } from 'react';
-import { CheckCircle, Clock, AlertCircle, DollarSign, Calendar, User, Filter } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  CheckCircle,
+  Clock,
+  AlertCircle,
+  Calendar,
+  User,
+  Plus,
+  Edit,
+  Trash2,
+} from "lucide-react";
 
 interface Project {
   id: number;
+  workId: string;
   name: string;
-  client: string;
-  workStatus: 'not-started' | 'in-progress' | 'under-review' | 'completed' | 'on-hold';
-  paymentStatus: 'pending' | 'partial' | 'paid' | 'overdue';
+  leadName: string;
+  quotationNo: string;
+  workStatus: "not-started" | "in-progress" | "completed";
   startDate: string;
   dueDate: string;
-  progress: number;
-  totalAmount: number;
-  paidAmount: number;
-  lastUpdate: string;
   assignedTo: string;
 }
 
 export default function StatusTracking() {
-  const [projects] = useState<Project[]>([
+  const [projects, setProjects] = useState<Project[]>([
     {
       id: 1,
-      name: 'Website Development',
-      client: 'John Smith - Tech Corp',
-      workStatus: 'in-progress',
-      paymentStatus: 'partial',
-      startDate: '2024-01-10',
-      dueDate: '2024-02-10',
-      progress: 65,
-      totalAmount: 6050,
-      paidAmount: 3000,
-      lastUpdate: '2024-01-16',
-      assignedTo: 'Andrea Pirlo'
+      workId: "W-001",
+      name: "Website Development",
+      leadName: "John Smith",
+      quotationNo: "Q-1001",
+      workStatus: "in-progress",
+      startDate: "2024-01-10",
+      dueDate: "2024-02-10",
+      assignedTo: "Andrea Pirlo",
     },
-    {
-      id: 2,
-      name: 'Custom Solution',
-      client: 'Sarah Johnson - Design Studio',
-      workStatus: 'not-started',
-      paymentStatus: 'pending',
-      startDate: '2024-01-20',
-      dueDate: '2024-02-20',
-      progress: 0,
-      totalAmount: 3300,
-      paidAmount: 0,
-      lastUpdate: '2024-01-15',
-      assignedTo: 'Team Lead'
-    },
-    {
-      id: 3,
-      name: 'Mobile App',
-      client: 'Mike Davis - Marketing Inc',
-      workStatus: 'completed',
-      paymentStatus: 'paid',
-      startDate: '2024-01-01',
-      dueDate: '2024-01-31',
-      progress: 100,
-      totalAmount: 8500,
-      paidAmount: 8500,
-      lastUpdate: '2024-01-31',
-      assignedTo: 'Development Team'
-    },
-    {
-      id: 4,
-      name: 'E-commerce Platform',
-      client: 'Lisa Wilson - Retail Co',
-      workStatus: 'under-review',
-      paymentStatus: 'overdue',
-      startDate: '2024-01-05',
-      dueDate: '2024-02-05',
-      progress: 85,
-      totalAmount: 12000,
-      paidAmount: 5000,
-      lastUpdate: '2024-01-14',
-      assignedTo: 'Senior Developer'
-    }
   ]);
 
-  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [editProject, setEditProject] = useState<Project | null>(null);
 
-  const getWorkStatusColor = (status: string) => {
-    switch (status) {
-      case 'not-started': return 'bg-gray-500';
-      case 'in-progress': return 'bg-blue-500';
-      case 'under-review': return 'bg-yellow-500';
-      case 'completed': return 'bg-green-500';
-      case 'on-hold': return 'bg-red-500';
-      default: return 'bg-gray-500';
+  const [formData, setFormData] = useState<Project>({
+    id: 0,
+    workId: "",
+    name: "",
+    leadName: "",
+    quotationNo: "",
+    workStatus: "not-started",
+    startDate: "",
+    dueDate: "",
+    assignedTo: "",
+  });
+
+  const handleOpenModal = (project?: Project) => {
+    if (project) {
+      setEditProject(project);
+      setFormData(project);
+    } else {
+      setEditProject(null);
+      setFormData({
+        id: 0,
+        workId: "",
+        name: "",
+        leadName: "",
+        quotationNo: "",
+        workStatus: "not-started",
+        startDate: "",
+        dueDate: "",
+        assignedTo: "",
+      });
     }
+    setShowModal(true);
   };
 
-  const getPaymentStatusColor = (status: string) => {
-    switch (status) {
-      case 'pending': return 'bg-gray-500';
-      case 'partial': return 'bg-yellow-500';
-      case 'paid': return 'bg-green-500';
-      case 'overdue': return 'bg-red-500';
-      default: return 'bg-gray-500';
+  const handleSave = () => {
+    if (editProject) {
+      // update
+      setProjects((prev) =>
+        prev.map((p) => (p.id === editProject.id ? { ...formData } : p))
+      );
+    } else {
+      // add new
+      setProjects((prev) => [
+        ...prev,
+        { ...formData, id: prev.length + 1 },
+      ]);
     }
+    setShowModal(false);
   };
 
-  const getWorkStatusIcon = (status: string) => {
-    switch (status) {
-      case 'not-started': return <Clock className="text-gray-600" size={20} />;
-      case 'in-progress': return <Clock className="text-blue-600" size={20} />;
-      case 'under-review': return <AlertCircle className="text-yellow-600" size={20} />;
-      case 'completed': return <CheckCircle className="text-green-600" size={20} />;
-      case 'on-hold': return <AlertCircle className="text-red-600" size={20} />;
-      default: return <Clock className="text-gray-600" size={20} />;
-    }
+  const handleDelete = (id: number) => {
+    setDeleteId(id);
+    setShowDeleteModal(true);
   };
 
-  const filteredProjects = filterStatus === 'all' 
-    ? projects 
-    : projects.filter(project => project.workStatus === filterStatus);
+  const confirmDelete = () => {
+    if (deleteId !== null) {
+      setProjects((prev) => prev.filter((p) => p.id !== deleteId));
+    }
+    setShowDeleteModal(false);
+    setDeleteId(null);
+  };
+
+  const filteredProjects =
+    filterStatus === "all"
+      ? projects
+      : projects.filter((project) => project.workStatus === filterStatus);
 
   return (
     <div className="space-y-6">
-      {/* Action Header */}
+      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">Status Tracking</h2>
-          <p className="text-gray-600 mt-1">Monitor work progress and payment status</p>
+          <h2 className="text-2xl font-bold text-gray-800">
+            Work Status Tracking
+          </h2>
+          <p className="text-gray-600 mt-1">
+            Monitor work progress and payment status
+          </p>
         </div>
         <div className="flex items-center space-x-4">
           <select
@@ -131,160 +131,80 @@ export default function StatusTracking() {
             <option value="all">All Status</option>
             <option value="not-started">Not Started</option>
             <option value="in-progress">In Progress</option>
-            <option value="under-review">Under Review</option>
             <option value="completed">Completed</option>
-            <option value="on-hold">On Hold</option>
           </select>
+          <button
+            onClick={() => handleOpenModal()}
+            className="flex items-center bg-teal-500 text-white px-4 py-2 rounded-xl hover:bg-teal-600"
+          >
+            <Plus size={16} className="mr-2" /> Add Work
+          </button>
         </div>
       </div>
 
-      {/* Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white/40 backdrop-blur-md rounded-2xl p-6 border border-white/40">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm font-medium">Total Projects</p>
-              <p className="text-3xl font-bold text-gray-800 mt-2">{projects.length}</p>
-            </div>
-            <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center">
-              <CheckCircle className="text-white" size={24} />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white/40 backdrop-blur-md rounded-2xl p-6 border border-white/40">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm font-medium">In Progress</p>
-              <p className="text-3xl font-bold text-blue-600 mt-2">
-                {projects.filter(p => p.workStatus === 'in-progress').length}
-              </p>
-            </div>
-            <div className="w-12 h-12 bg-yellow-500 rounded-xl flex items-center justify-center">
-              <Clock className="text-white" size={24} />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white/40 backdrop-blur-md rounded-2xl p-6 border border-white/40">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm font-medium">Completed</p>
-              <p className="text-3xl font-bold text-green-600 mt-2">
-                {projects.filter(p => p.workStatus === 'completed').length}
-              </p>
-            </div>
-            <div className="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center">
-              <CheckCircle className="text-white" size={24} />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white/40 backdrop-blur-md rounded-2xl p-6 border border-white/40">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-gray-600 text-sm font-medium">Total Revenue</p>
-              <p className="text-3xl font-bold text-purple-600 mt-2">
-                ${projects.reduce((sum, p) => sum + p.paidAmount, 0).toLocaleString()}
-              </p>
-            </div>
-            <div className="w-12 h-12 bg-purple-500 rounded-xl flex items-center justify-center">
-              <DollarSign className="text-white" size={24} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Projects Table */}
+      {/* Table */}
       <div className="bg-white/40 backdrop-blur-md rounded-2xl border border-white/40 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-white/20">
               <tr>
-                <th className="px-6 py-4 text-left font-semibold text-gray-800">Project</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-800">Work Status</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-800">Progress</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-800">Payment Status</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-800">Timeline</th>
-                <th className="px-6 py-4 text-left font-semibold text-gray-800">Assigned To</th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-800">
+                  Work ID
+                </th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-800">
+                  Project
+                </th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-800">
+                Name
+                </th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-800">
+                  Quotation No
+                </th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-800">
+                  Status
+                </th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-800">
+                  Timeline
+                </th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-800">
+                  Assigned To
+                </th>
+                <th className="px-6 py-4 text-left font-semibold text-gray-800">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/20">
               {filteredProjects.map((project) => (
-                <tr key={project.id} className="hover:bg-white/20 transition-colors">
+                <tr
+                  key={project.id}
+                  className="hover:bg-white/20 transition-colors"
+                >
+                  <td className="px-6 py-4">{project.workId}</td>
+                  <td className="px-6 py-4">{project.name}</td>
+                  <td className="px-6 py-4">{project.leadName}</td>
+                  <td className="px-6 py-4">{project.quotationNo}</td>
+                  <td className="px-6 py-4 capitalize">{project.workStatus}</td>
                   <td className="px-6 py-4">
-                    <div>
-                      <p className="font-semibold text-gray-800">{project.name}</p>
-                      <p className="text-sm text-gray-600">{project.client}</p>
-                      <p className="text-xs text-gray-500 mt-1">Last update: {project.lastUpdate}</p>
-                    </div>
+                    <p className="text-sm text-gray-800 font-medium flex items-center">
+                      <Calendar size={14} className="mr-1" />
+                      {project.startDate} → {project.dueDate}
+                    </p>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center space-x-3">
-                      {getWorkStatusIcon(project.workStatus)}
-                      <div>
-                        <div className="flex items-center space-x-2">
-                          <div className={`w-3 h-3 rounded-full ${getWorkStatusColor(project.workStatus)}`}></div>
-                          <span className="capitalize font-medium text-gray-800">
-                            {project.workStatus.replace('-', ' ')}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div>
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm text-gray-600">{project.progress}%</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-blue-500 h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${project.progress}%` }}
-                        ></div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div>
-                      <div className="flex items-center space-x-2 mb-2">
-                        <div className={`w-3 h-3 rounded-full ${getPaymentStatusColor(project.paymentStatus)}`}></div>
-                        <span className="capitalize font-medium text-gray-800">{project.paymentStatus}</span>
-                      </div>
-                      <div className="text-sm">
-                        <p className="text-gray-800 font-medium">
-                          ${project.paidAmount.toLocaleString()} / ${project.totalAmount.toLocaleString()}
-                        </p>
-                        <div className="w-full bg-gray-200 rounded-full h-1 mt-1">
-                          <div 
-                            className={`h-1 rounded-full ${
-                              project.paymentStatus === 'paid' ? 'bg-green-500' :
-                              project.paymentStatus === 'partial' ? 'bg-yellow-500' :
-                              project.paymentStatus === 'overdue' ? 'bg-red-500' : 'bg-gray-400'
-                            }`}
-                            style={{ width: `${(project.paidAmount / project.totalAmount) * 100}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm">
-                      <p className="text-gray-800 font-medium flex items-center">
-                        <Calendar size={14} className="mr-1" />
-                        Start: {project.startDate}
-                      </p>
-                      <p className="text-gray-600 mt-1">Due: {project.dueDate}</p>
-                      {new Date(project.dueDate) < new Date() && project.workStatus !== 'completed' && (
-                        <p className="text-red-600 font-medium mt-1">Overdue</p>
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center space-x-2">
-                      <User size={16} className="text-gray-600" />
-                      <span className="text-gray-800 font-medium">{project.assignedTo}</span>
-                    </div>
+                  <td className="px-6 py-4">{project.assignedTo}</td>
+                  <td className="px-6 py-4 flex space-x-3">
+                    <button
+                      onClick={() => handleOpenModal(project)}
+                      className="text-blue-600 hover:text-blue-800"
+                    >
+                      <Edit size={18} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(project.id)}
+                      className="text-red-600 hover:text-red-800"
+                    >
+                      <Trash2 size={18} />
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -293,36 +213,165 @@ export default function StatusTracking() {
         </div>
       </div>
 
-      {/* Payment Summary */}
-      <div className="bg-white/40 backdrop-blur-md rounded-2xl p-6 border border-white/40">
-        <h3 className="text-xl font-bold text-gray-800 mb-6">Payment Summary</h3>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-gray-600">
-              {projects.filter(p => p.paymentStatus === 'pending').length}
+      {/* Add/Edit Modal */}
+     {/* Add/Edit Modal */}
+{showModal && (
+  <div className="fixed inset-0 bg-black/40 rounded-2xl backdrop-blur-sm flex items-center justify-center animate-fadeIn z-50">
+    <div className="bg-white w-[700px] shadow-2xl border border-gray-300">
+      
+      {/* Modal Header */}
+      <div className="bg-gradient-to-r from-teal-600 to-teal-500 px-6 py-4 border-b border-gray-200">
+        <h3 className="text-2xl font-bold text-white">
+          {editProject ? "Edit Work" : "Add Work"}
+        </h3>
+        <p className="text-xs text-teal-100 mt-1">
+          Fill in the details below to continue
+        </p>
+      </div>
+
+     
+     {/* Modal Body */}
+<div className="p-6 space-y-4 bg-white">
+  <div className="grid grid-cols-2 gap-4">
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">Work ID</label>
+      <input
+        type="text"
+        placeholder="Enter Work ID"
+        value={formData.workId}
+        onChange={(e) => setFormData({ ...formData, workId: e.target.value })}
+        className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+      />
+    </div>
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">Project Name</label>
+      <input
+        type="text"
+        placeholder="Enter project name"
+        value={formData.name}
+        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+        className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+      />
+    </div>
+  </div>
+
+  <div className="grid grid-cols-2 gap-4">
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">Lead Name</label>
+      <input
+        type="text"
+        placeholder="Enter lead name"
+        value={formData.leadName}
+        onChange={(e) => setFormData({ ...formData, leadName: e.target.value })}
+        className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+      />
+    </div>
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">Quotation No</label>
+      <input
+        type="text"
+        placeholder="Enter quotation number"
+        value={formData.quotationNo}
+        onChange={(e) => setFormData({ ...formData, quotationNo: e.target.value })}
+        className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+      />
+    </div>
+  </div>
+
+  <div className="grid grid-cols-2 gap-4">
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+      <input
+        type="date"
+        value={formData.startDate}
+        onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+        className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+      />
+    </div>
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+      <input
+        type="date"
+        value={formData.dueDate}
+        onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
+        className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+      />
+    </div>
+  </div>
+
+  <div className="grid grid-cols-2 gap-4">
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+      <select
+        value={formData.workStatus}
+        onChange={(e) =>
+          setFormData({ ...formData, workStatus: e.target.value as Project["workStatus"] })
+        }
+        className="w-full border border-gray-300 px-3 py-2 bg-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+      >
+        <option value="not-started">🟠 Not Started</option>
+        <option value="in-progress">🔵 In Progress</option>
+        <option value="completed">🟢 Completed</option>
+      </select>
+    </div>
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">Assigned To</label>
+      <input
+        type="text"
+        placeholder="Assigned to"
+        value={formData.assignedTo}
+        onChange={(e) => setFormData({ ...formData, assignedTo: e.target.value })}
+        className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+      />
+    </div>
+  </div>
+</div>
+
+      {/* Modal Footer */}
+      <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end space-x-3">
+        <button
+          onClick={() => setShowModal(false)}
+          className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleSave}
+          className="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold shadow-sm"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
+      {/* Delete Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-sm">
+            <h3 className="text-lg font-bold mb-4">Confirm Delete</h3>
+            <p className="text-gray-600">
+              Are you sure you want to delete this work?
+            </p>
+            <div className="flex justify-end mt-6 space-x-3">
+              <button
+                onClick={() => setShowDeleteModal(false)}
+                className="px-4 py-2 border rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmDelete}
+                className="px-4 py-2 bg-red-500 text-white rounded"
+              >
+                Delete
+              </button>
             </div>
-            <div className="text-gray-700 font-medium mt-1">Pending Payments</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-yellow-600">
-              {projects.filter(p => p.paymentStatus === 'partial').length}
-            </div>
-            <div className="text-gray-700 font-medium mt-1">Partial Payments</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-red-600">
-              {projects.filter(p => p.paymentStatus === 'overdue').length}
-            </div>
-            <div className="text-gray-700 font-medium mt-1">Overdue Payments</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">
-              {projects.filter(p => p.paymentStatus === 'paid').length}
-            </div>
-            <div className="text-gray-700 font-medium mt-1">Paid Projects</div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

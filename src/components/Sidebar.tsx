@@ -19,6 +19,7 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'leads', label: 'Lead Management', icon: Users },
+    { id: 'follow', label: 'FollowUpRecords', icon: Users },
     { id: 'quotations', label: 'Quotations', icon: FileText },
     { id: 'status', label: 'Status Tracking', icon: BarChart3 },
     { id: 'messenger', label: 'Messenger', icon: MessageSquare },

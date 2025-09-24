@@ -5,6 +5,7 @@ import Dashboard from './components/Dashboard';
 import LeadManagement from './components/LeadManagement';
 import QuotationManager from './components/QuotationManager';
 import StatusTracking from './components/StatusTracking';
+import FollowUpRecords from './components/FollowUpRecords';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -15,6 +16,8 @@ function App() {
         return <Dashboard />;
       case 'leads':
         return <LeadManagement />;
+         case 'follow':
+        return <FollowUpRecords />;
       case 'quotations':
         return <QuotationManager />;
       case 'status':
@@ -25,7 +28,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-100 via-blue-100 to-purple-200">
+    <div className="min-h-screen bg-gradient-to-b from-[#E1F3F3] to-[#C6E0E0]">
       <div className="flex h-screen">
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <main className="flex-1 flex flex-col overflow-hidden">

@@ -20,7 +20,7 @@ export default function Navbar({ userName, userRole }: NavbarProps) {
   const unreadCount = notifications.filter(n => n.unread).length;
 
   return (
-    <nav className="bg-white/20 backdrop-blur-md border-b border-white/30 px-6 py-4">
+    <nav className="  px-6 py-8">
       <div className="flex items-center justify-between">
         {/* Welcome Section */}
         <div className="flex items-center space-x-4">

@@ -15,16 +15,16 @@ interface SidebarProps {
   setActiveTab: (tab: string) => void;
 }
 
+
+
 export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'leads', label: 'Lead Management', icon: Users },
-    { id: 'follow', label: 'FollowUpRecords', icon: Users },
-    { id: 'quotations', label: 'Quotations', icon: FileText },
-    { id: 'status', label: 'Status Tracking', icon: BarChart3 },
-    { id: 'messenger', label: 'Messenger', icon: MessageSquare },
-    { id: 'calendar', label: 'Calendar', icon: Calendar },
-    { id: 'finance', label: 'Finance', icon: DollarSign },
+    { id: 'follow', label: 'Follow Up Data', icon: Users },
+    { id: 'quotations', label: 'Quotations Tab', icon: FileText },
+    { id: 'status', label: ' Work Status Track', icon: BarChart3 },
+    { id: 'Payment', label: 'Payment Tab', icon: MessageSquare },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 

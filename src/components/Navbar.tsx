@@ -38,9 +38,10 @@ export default function Navbar({ userName, userRole }: NavbarProps) {
             <input
               type="text"
               placeholder="Search..."
-              className="w-64 pl-10 pr-4 py-2 bg-white/50 border border-white/30 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
+              className="w-64 pl-10 pr-4 py-2 bg-white/50 border border-white/30 rounded-xl shadow-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:shadow-lg text-sm"
             />
           </div>
+
 
           {/* Notifications */}
           <div className="relative">
@@ -56,7 +57,6 @@ export default function Navbar({ userName, userRole }: NavbarProps) {
               )}
             </button>
 
-            {/* Notifications Dropdown */}
             {showNotifications && (
               <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-200 z-50">
                 <div className="p-4 border-b border-gray-100">
@@ -66,14 +66,12 @@ export default function Navbar({ userName, userRole }: NavbarProps) {
                   {notifications.map((notification) => (
                     <div
                       key={notification.id}
-                      className={`p-4 border-b border-gray-50 hover:bg-gray-50 transition-colors ${
-                        notification.unread ? 'bg-blue-50' : ''
-                      }`}
+                      className={`p-4 border-b border-gray-50 hover:bg-gray-50 transition-colors ${notification.unread ? 'bg-blue-50' : ''
+                        }`}
                     >
                       <div className="flex items-start space-x-3">
-                        <div className={`w-2 h-2 rounded-full mt-2 ${
-                          notification.unread ? 'bg-blue-500' : 'bg-gray-300'
-                        }`}></div>
+                        <div className={`w-2 h-2 rounded-full mt-2 ${notification.unread ? 'bg-blue-500' : 'bg-gray-300'
+                          }`}></div>
                         <div className="flex-1">
                           <p className="text-sm text-gray-800">{notification.message}</p>
                           <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
@@ -95,7 +93,7 @@ export default function Navbar({ userName, userRole }: NavbarProps) {
           <div className="relative">
             <button
               onClick={() => setShowProfileDropdown(!showProfileDropdown)}
-              className="flex items-center space-x-3 p-2 bg-white/30 rounded-xl hover:bg-white/40 transition-colors"
+              className="flex items-center space-x-3 p-2 rounded-xl hover:bg-white/40 transition-colors"
             >
               <div className="w-8 h-8 bg-gradient-to-r from-teal-500 to-blue-600 rounded-full flex items-center justify-center">
                 <span className="text-white font-semibold text-sm">
@@ -106,7 +104,6 @@ export default function Navbar({ userName, userRole }: NavbarProps) {
                 <p className="text-sm font-semibold text-gray-800">{userName}</p>
                 <p className="text-xs text-gray-600">{userRole}</p>
               </div>
-              <ChevronDown size={16} className="text-gray-600" />
             </button>
 
             {/* Profile Dropdown Menu */}
@@ -125,7 +122,7 @@ export default function Navbar({ userName, userRole }: NavbarProps) {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="py-2">
                   <button className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left">
                     <User size={18} className="text-gray-600" />
@@ -136,7 +133,7 @@ export default function Navbar({ userName, userRole }: NavbarProps) {
                     <span className="text-gray-800">Settings</span>
                   </button>
                 </div>
-                
+
                 <div className="border-t border-gray-100 py-2">
                   <button className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-red-50 transition-colors text-left">
                     <LogOut size={18} className="text-red-600" />

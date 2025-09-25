@@ -135,7 +135,7 @@ export default function StatusTracking() {
           </select>
           <button
             onClick={() => handleOpenModal()}
-            className="flex items-center bg-teal-500 text-white px-4 py-2 rounded-xl hover:bg-teal-600"
+            className="flex items-center bg-teal-600 text-white px-4 py-2 rounded-xl hover:bg-teal-600"
           >
             <Plus size={16} className="mr-2" /> Add Work
           </button>

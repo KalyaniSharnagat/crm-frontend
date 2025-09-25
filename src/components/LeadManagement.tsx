@@ -232,94 +232,110 @@ export default function LeadManagement({ setActiveTab }: LeadManagementProps) {
 
       {/* Add/Edit Modal */}
       {showFormModal && (
-        <div className="fixed inset-0 bg-black/40 rounded-2xl backdrop-blur-sm flex items-center justify-center animate-fadeIn">
-          <div className="bg-white w-[700px] shadow-2xl border border-gray-300">
-            <div className="bg-gradient-to-r from-teal-600 to-teal-500  px-6 py-4 border-b border-gray-200">
-              <h3 className="text-2xl font-bold text-white">{editLead ? " Edit Lead" : " Add Lead"}</h3>
-              <p className="text-xs text-teal-100 mt-1">Fill in the details below to continue</p>
-            </div>
-            <div className="p-6 space-y-4 bg-white">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                <input
-                  type="text"
-                  placeholder="Enter full name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input
-                  type="email"
-                  placeholder="Enter email address"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                <input
-                  type="text"
-                  placeholder="+91 XXXXX XXXXX"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
-                <input
-                  type="text"
-                  placeholder="Company name"
-                  value={formData.company}
-                  onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-                  className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Lead Source</label>
-                <select
-                  value={formData.source}
-                  onChange={(e) => setFormData({ ...formData, source: e.target.value })}
-                  className="w-full border border-gray-300 px-3 py-2 bg-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
-                >
-                  <option value="Website">🌐 Website</option>
-                  <option value="Referral">🤝 Referral</option>
-                  <option value="Cold Call">📞 Cold Call</option>
-                  <option value="LinkedIn">💼 LinkedIn</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                <select
-                  value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value as Lead['status'] })}
-                  className="w-full border border-gray-300 px-3 py-2 bg-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
-                >
-                  <option value="new">🟠 New</option>
-                  <option value="positive">🟢 Positive</option>
-                </select>
-              </div>
-            </div>
-            <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end space-x-3">
-              <button
-                onClick={() => setShowFormModal(false)}
-                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSaveLead}
-                className="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold shadow-sm"
-              >
-                Save
-              </button>
-            </div>
-          </div>
+       <div className="fixed inset-0 bg-black/40 rounded-2xl backdrop-blur-sm flex items-center justify-center animate-fadeIn">
+  <div className="bg-white w-[700px] shadow-2xl border border-gray-300">
+    <div className="bg-gradient-to-r from-teal-600 to-teal-500 px-6 py-4 border-b border-gray-200">
+      <h3 className="text-2xl font-bold text-white">{editLead ? " Edit Lead" : " Add Lead"}</h3>
+      <p className="text-xs text-teal-100 mt-1">Fill in the details below to continue</p>
+    </div>
+
+    {/* Form */}
+    <div className="p-6 space-y-4 bg-white">
+      {/* Row 1 */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+          <input
+            type="text"
+            placeholder="Enter full name"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+          />
         </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+          <input
+            type="email"
+            placeholder="Enter email address"
+            value={formData.email}
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+          />
+        </div>
+      </div>
+
+      {/* Row 2 */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+          <input
+            type="text"
+            placeholder="+91 XXXXX XXXXX"
+            value={formData.phone}
+            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
+          <input
+            type="text"
+            placeholder="Company name"
+            value={formData.company}
+            onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+            className="w-full border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+          />
+        </div>
+      </div>
+
+      {/* Row 3 */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Lead Source</label>
+          <select
+            value={formData.source}
+            onChange={(e) => setFormData({ ...formData, source: e.target.value })}
+            className="w-full border border-gray-300 px-3 py-2 bg-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+          >
+            <option value="Website">🌐 Website</option>
+            <option value="Referral">🤝 Referral</option>
+            <option value="Cold Call">📞 Cold Call</option>
+            <option value="LinkedIn">💼 LinkedIn</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+          <select
+            value={formData.status}
+            onChange={(e) => setFormData({ ...formData, status: e.target.value as Lead['status'] })}
+            className="w-full border border-gray-300 px-3 py-2 bg-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
+          >
+            <option value="new">🟠 New</option>
+            <option value="positive">🟢 Positive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    {/* Footer */}
+    <div className="px-6 py-4 border-t border-gray-200 bg-gray-50 flex justify-end space-x-3">
+      <button
+        onClick={() => setShowFormModal(false)}
+        className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium"
+      >
+        Cancel
+      </button>
+      <button
+        onClick={handleSaveLead}
+        className="px-5 py-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold shadow-sm"
+      >
+        Save
+      </button>
+    </div>
+  </div>
+</div>
+
       )}
     </div>
   );

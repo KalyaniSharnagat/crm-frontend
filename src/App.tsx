@@ -6,6 +6,7 @@ import LeadManagement from './components/LeadManagement';
 import QuotationManager from './components/QuotationManager';
 import StatusTracking from './components/StatusTracking';
 import FollowUpData from './components/FollowUpData';
+import PaymentStatus from './components/PaymentStatus';
 import Login from './login/Login';
 
 function App() {
@@ -23,9 +24,11 @@ function App() {
       case 'quotations':
         return <QuotationManager />;
       case 'status':
+          return <StatusTracking />;
       case 'Payment':
-      case 'settings':
-        return <StatusTracking />;
+         return <PaymentStatus/>;
+      // case 'settings':
+      //   return <StatusTracking />;
       default:
         return <Dashboard />;
     }

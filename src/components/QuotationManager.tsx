@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Download, Edit, Eye, Trash2 } from 'lucide-react';
+import { Plus, Download, Edit, Eye, Trash2, Send } from 'lucide-react';
 
 interface QuotationItem {
   id: number;
@@ -336,15 +336,15 @@ export default function QuotationManager() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
-              <input type="text" value={quotation.leadName} readOnly className="w-full px-3 py-2 border rounded-lg bg-gray-100"/>
+              <input type="text" value={quotation.leadName} readOnly className="w-full px-3 py-2 border rounded-lg bg-gray-100" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Company</label>
-              <input type="text" value={quotation.company} readOnly className="w-full px-3 py-2 border rounded-lg bg-gray-100"/>
+              <input type="text" value={quotation.company} readOnly className="w-full px-3 py-2 border rounded-lg bg-gray-100" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Valid Until</label>
-              <input type="date" value={quotation.validUntil} readOnly className="w-full px-3 py-2 border rounded-lg bg-gray-100"/>
+              <input type="date" value={quotation.validUntil} readOnly className="w-full px-3 py-2 border rounded-lg bg-gray-100" />
             </div>
           </div>
 
@@ -354,16 +354,16 @@ export default function QuotationManager() {
               {quotation.items.map(item => (
                 <div key={item.id} className="grid grid-cols-12 gap-3 items-center bg-gray-50 p-3 rounded-lg">
                   <div className="col-span-5">
-                    <input type="text" value={item.description} readOnly className="w-full px-2 py-1 border rounded bg-gray-100"/>
+                    <input type="text" value={item.description} readOnly className="w-full px-2 py-1 border rounded bg-gray-100" />
                   </div>
                   <div className="col-span-2">
-                    <input type="number" value={item.quantity} readOnly className="w-full px-2 py-1 border rounded bg-gray-100"/>
+                    <input type="number" value={item.quantity} readOnly className="w-full px-2 py-1 border rounded bg-gray-100" />
                   </div>
                   <div className="col-span-2">
-                    <input type="number" value={item.rate} readOnly className="w-full px-2 py-1 border rounded bg-gray-100"/>
+                    <input type="number" value={item.rate} readOnly className="w-full px-2 py-1 border rounded bg-gray-100" />
                   </div>
                   <div className="col-span-2">
-                    <input type="number" value={item.amount} readOnly className="w-full px-2 py-1 border rounded bg-gray-100"/>
+                    <input type="number" value={item.amount} readOnly className="w-full px-2 py-1 border rounded bg-gray-100" />
                   </div>
                 </div>
               ))}
@@ -380,7 +380,7 @@ export default function QuotationManager() {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Notes</label>
-            <textarea value={quotation.notes} readOnly rows={3} className="w-full px-3 py-2 border rounded-lg bg-gray-100"/>
+            <textarea value={quotation.notes} readOnly rows={3} className="w-full px-3 py-2 border rounded-lg bg-gray-100" />
           </div>
 
           <div className="flex justify-end">
@@ -480,6 +480,17 @@ export default function QuotationManager() {
                       title="Export to PDF"
                     >
                       <Download size={16} />
+                    </button>
+
+                    <button
+                      // onClick={() => {
+                        
+                      //   handleSendQuotation(quotation);
+                      // }}
+                      className="text-teal-600 hover:text-teal-800 p-1"
+                      title="Send Quotation"
+                    >
+                      <Send size={16} />
                     </button>
                   </td>
                 </tr>

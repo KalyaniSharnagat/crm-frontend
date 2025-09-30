@@ -1,72 +1,103 @@
+"use client";
 import React from "react";
-import { Users, TrendingUp, FileText, CheckCircle, Calendar } from "lucide-react";
+import { Users, FileText, Briefcase, PhoneCall } from "lucide-react";
 
-export default function Dashboard() {
-const stats = [
-  { title: "Total Leads", value: 156, change: 12, color: "from-indigo-100 to-purple-100", icon: Users },
-  { title: "Positive Leads", value: 89, change: 8, color: "from-green-100 to-teal-100", icon: TrendingUp },
-  { title: "Total Quotations", value: 23, change: 15, color: "from-pink-100 to-rose-100", icon: FileText },
-  { title: "Completed Projects", value: 18, change: 10, color: "from-yellow-100 to-orange-100", icon: CheckCircle },
-  { title: "Total Follow-ups", value: 72, change: 9, color: "from-cyan-100 to-blue-100", icon: Calendar },
-];
+// ✅ Simple Card Components
+const Card = ({ children }: { children: React.ReactNode }) => (
+  <div className="bg-white shadow-lg rounded-2xl p-4">{children}</div>
+);
+const CardHeader = ({ children }: { children: React.ReactNode }) => (
+  <div className="mb-2">{children}</div>
+);
+const CardTitle = ({ children }: { children: React.ReactNode }) => (
+  <h2 className="text-lg font-semibold">{children}</h2>
+);
+const CardContent = ({ children }: { children: React.ReactNode }) => (
+  <div>{children}</div>
+);
 
+const Dashboard: React.FC = () => {
+  const userName = "Rahul Sharma";
+  const clientName = "ABC Pvt Ltd";
+
+  // Example stats (API से भी ला सकते हो)
+  const stats = {
+    leads: { total: 120, approved: 80, pending: 25, rejected: 15 },
+    quotations: { total: 45 },
+    projects: { total: 30, complete: 18, pending: 7, rejected: 5 },
+    followUps: { total: 60, approved: 40, rejected: 20 },
+  };
 
   return (
-    <div className="space-y-12">
-
-      {/* First Row: 3 Cards */}
-      <div className="flex justify-center gap-10 flex-wrap mt-12 ">
-        {stats.slice(0, 3).map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <div
-              key={index}
-              className={`relative flex flex-col items-center justify-center p-6 w-80 rounded-3xl bg-gradient-to-br ${stat.color}  shadow-2xl transform transition duration-500 hover:scale-105 hover:-translate-y-2 hover:shadow-3xl`}
-            >
-              <div className="absolute -top-8 flex items-center justify-center w-16 h-16 bg-white/25 backdrop-blur-md rounded-full shadow-lg">
-                <Icon size={28} />
-              </div>
-
-              <div className="mt-12 text-center">
-                <p className="text-3xl font-extrabold">{stat.value}</p>
-                <p className="text-lg font-semibold mt-1">{stat.title}</p>
-                <p className= "text-sm mt-2">
-                  {stat.change >= 0 ? `+${stat.change}%` : `${stat.change}%`} from last week
-                </p>
-              </div>
-
-              <div className="absolute inset-0 rounded-3xl bg-gradient-to-br opacity-20 blur-xl pointer-events-none"></div>
-            </div>
-          );
-        })}
+    <div className="min-h-screen bg-gray-50 p-6">
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
+        <p className="text-gray-600">
+          User: <span className="font-semibold">{userName}</span> | Client:{" "}
+          <span className="font-semibold">{clientName}</span>
+        </p>
       </div>
 
-      {/* Second Row: Remaining Cards Centered */}
-      {stats.length > 3 && (
-        <div className="flex justify-center gap-6 flex-wrap">
-          {stats.slice(3).map((stat, index) => {
-            const Icon = stat.icon;
-            return (
-              <div
-                key={index}
-                className={`relative flex flex-col items-center justify-center p-6 w-80 rounded-3xl bg-gradient-to-br ${stat.color}    shadow-2xl transform transition duration-500 hover:scale-105 hover:-translate-y-2 hover:shadow-3xl`}
-              >
-                <div className="absolute -top-8 flex items-center justify-center w-16 h-16 bg-white/25 backdrop-blur-md rounded-full shadow-lg">
-                  <Icon size={28} />
-                </div>
-                <div className="mt-12 text-center">
-                  <p className="text-3xl font-extrabold">{stat.value}</p>
-                  <p className="text-lg font-semibold mt-1">{stat.title}</p>
-                  <p className="text-sm mt-2 ">
-                    {stat.change >= 0 ? `+${stat.change}%` : `${stat.change}%`} from last week
-                  </p>
-                </div>
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br opacity-20 blur-xl pointer-events-none"></div>
-              </div>
-            ); 
-          })}
-        </div>
-      )}
+      {/* Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Total Leads */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-blue-600">
+              <Users /> Total Leads ({stats.leads.total})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-green-600">Approved: {stats.leads.approved}</p>
+            <p className="text-yellow-600">Pending: {stats.leads.pending}</p>
+            <p className="text-red-600">Rejected: {stats.leads.rejected}</p>
+          </CardContent>
+        </Card>
+
+        {/* Quotations */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-purple-600">
+              <FileText /> Quotations
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xl font-bold text-purple-700">
+              {stats.quotations.total}
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Projects */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-indigo-600">
+              <Briefcase /> Projects ({stats.projects.total})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-green-600">Completed: {stats.projects.complete}</p>
+            <p className="text-yellow-600">Pending: {stats.projects.pending}</p>
+            <p className="text-red-600">Rejected: {stats.projects.rejected}</p>
+          </CardContent>
+        </Card>
+
+        {/* Follow Ups */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-orange-600">
+              <PhoneCall /> Follow Ups ({stats.followUps.total})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-green-600">Approved: {stats.followUps.approved}</p>
+            <p className="text-red-600">Rejected: {stats.followUps.rejected}</p>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
-}
+};
+
+export default Dashboard;

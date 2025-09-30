@@ -1,20 +1,18 @@
-import React from 'react';
-import { Search, Bell, Settings, LogOut, User } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, Bell, LogOut, User, Mail, Phone } from 'lucide-react';
 
 interface NavbarProps {
   userName: string;
   userRole: string;
+  userEmail: string;
+  userContact: string;
+  setActiveTab: (tab: string) => void;
 }
 
-export default function Navbar({ userName, userRole }: NavbarProps) {
-  const notifications = [
-    { id: 1, message: 'New lead generated from website', time: '2 min ago', unread: true },
-    { id: 2, message: 'Payment received from John Smith', time: '1 hour ago', unread: true },
-    { id: 3, message: 'Quotation approved by Sarah Johnson', time: '3 hours ago', unread: false },
-    { id: 4, message: 'Follow-up reminder for Mike Davis', time: '5 hours ago', unread: false },
-  ];
+export default function Navbar({ userName, userRole, userEmail, userContact, setActiveTab }: NavbarProps) {
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const unreadCount = 3;
 
-  const unreadCount = notifications.filter(n => n.unread).length;
 
   return (
     <nav className="px-6 py-2 bg-[#ebedfa] rounded-2xl mt-4 mr-4 mb-4 shadow-lg">
@@ -24,10 +22,12 @@ export default function Navbar({ userName, userRole }: NavbarProps) {
 
         {/* Right Section */}
         <div className="flex items-center space-x-4">
-
-          {/* Notifications - Hover Dropdown */}
-          <div className="relative group">
-            <button className="relative p-2 bg-white/30 rounded-xl hover:bg-white/40 transition-colors">
+          {/* Notifications */}
+          <div className="relative">
+            <button
+              className="relative p-2 bg-white/30 rounded-xl hover:bg-white/40 transition-colors"
+              onClick={() => setActiveTab("notify")}
+            >
               <Bell size={20} className="text-gray-700" />
               {unreadCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
@@ -35,48 +35,14 @@ export default function Navbar({ userName, userRole }: NavbarProps) {
                 </span>
               )}
             </button>
-
-            {/* Dropdown (hover se show hoga) */}
-            <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-gray-200 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-              <div className="p-4 border-b border-gray-100">
-                <h3 className="font-semibold text-gray-800">Notifications</h3>
-              </div>
-              <div className="max-h-64 overflow-y-auto">
-                {notifications.map((notification) => (
-                  <div
-                    key={notification.id}
-                    className={`p-4 border-b border-gray-50 hover:bg-gray-50 transition-colors ${
-                      notification.unread ? 'bg-blue-50' : ''
-                    }`}
-                  >
-                    <div className="flex items-start space-x-3">
-                      <div
-                        className={`w-2 h-2 rounded-full mt-2 ${
-                          notification.unread ? 'bg-blue-500' : 'bg-gray-300'
-                        }`}
-                      ></div>
-                      <div className="flex-1">
-                        <p className="text-sm text-gray-800">{notification.message}</p>
-                        <p className="text-xs text-gray-500 mt-1">{notification.time}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="p-3 border-t border-gray-100">
-                <button className="w-full text-center text-teal-600 hover:text-teal-700 text-sm font-medium">
-                  View all notifications
-                </button>
-              </div>
-            </div>
           </div>
 
-          {/* Profile - Hover Dropdown */}
+          {/* Profile Dropdown */}
           <div className="relative group">
             <button className="flex items-center space-x-3 p-2 rounded-xl hover:bg-white/40 transition-colors">
               <div className="w-8 h-8 bg-gradient-to-r from-teal-500 to-blue-600 rounded-full flex items-center justify-center">
                 <span className="text-white font-semibold text-sm">
-                  {userName.split(' ').map((n) => n[0]).join('')}
+                  {userName.split(' ').map(n => n[0]).join('')}
                 </span>
               </div>
               <div className="hidden md:block text-left">
@@ -85,14 +51,11 @@ export default function Navbar({ userName, userRole }: NavbarProps) {
               </div>
             </button>
 
-            {/* Dropdown (hover se show hoga) */}
             <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-gray-200 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
               <div className="p-4 border-b border-gray-100">
                 <div className="flex items-center space-x-3">
                   <div className="w-12 h-12 bg-gradient-to-r from-teal-500 to-blue-600 rounded-full flex items-center justify-center">
-                    <span className="text-white font-semibold">
-                      {userName.split(' ').map((n) => n[0]).join('')}
-                    </span>
+                    <span className="text-white font-semibold">{userName.split(' ').map(n => n[0]).join('')}</span>
                   </div>
                   <div>
                     <p className="font-semibold text-gray-800">{userName}</p>
@@ -101,13 +64,18 @@ export default function Navbar({ userName, userRole }: NavbarProps) {
                 </div>
               </div>
 
+              {/* My Profile Button */}
               <div className="py-2">
-                <button className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left">
+                <button
+                  onClick={() => setIsProfileModalOpen(true)}
+                  className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-gray-50 transition-colors text-left"
+                >
                   <User size={18} className="text-gray-600" />
                   <span className="text-gray-800">My Profile</span>
                 </button>
               </div>
 
+              {/* Sign Out */}
               <div className="border-t border-gray-100 py-2">
                 <button className="w-full flex items-center space-x-3 px-4 py-3 hover:bg-red-50 transition-colors text-left">
                   <LogOut size={18} className="text-red-600" />
@@ -130,6 +98,55 @@ export default function Navbar({ userName, userRole }: NavbarProps) {
           />
         </div>
       </div>
+
+     {isProfileModalOpen && (
+  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+    <div className="bg-white rounded-2xl w-[350px] shadow-xl relative p-6">
+      
+      {/* Gradient background circle effect */}
+      <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-orange-400 rounded-2xl -z-10" />
+
+      {/* Profile Image Placeholder */}
+      <div className="flex justify-center -mt-16 mb-4">
+        <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-md">
+          <div className="w-20 h-20 bg-gradient-to-r from-teal-500 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+            {userName.split(' ').map(n => n[0]).join('')}
+          </div>
+        </div>
+      </div>
+
+      {/* User Info */}
+      <div className="text-center">
+        <h2 className="text-xl font-semibold text-gray-800">{userName}</h2>
+        <p className="text-sm text-gray-600">{userRole}</p>
+      </div>
+
+      {/* Contact Info */}
+
+      <div className="mt-4 space-y-2 px-4">
+
+
+        <div className="flex items-center space-x-2 text-sm text-gray-700">
+          <Mail className="w-4 h-4 text-teal-600" />
+          <span>{userEmail}</span>
+        </div>
+        <div className="flex items-center space-x-2 text-sm text-gray-700">
+          <Phone className="w-4 h-4 text-teal-600" />
+          <span>{userContact}</span>
+        </div>
+      </div>
+
+      {/* Close Button */}
+      <button
+        onClick={() => setIsProfileModalOpen(false)}
+        className="mt-6 w-full bg-teal-600 hover:bg-teal-600 text-white py-2 rounded-xl transition-colors"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
+
     </nav>
   );
 }

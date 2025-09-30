@@ -8,6 +8,7 @@ import QuotationManager from "./components/QuotationManager";
 import FollowUpData from "./components/FollowUpData";
 import PaymentStatus from "./components/PaymentStatus";
 import Assignlist from "./components/Assignlist";
+import Notification from "./components/Notification";
 import Login from "./login/Login";
 
 function App() {
@@ -26,6 +27,8 @@ function App() {
         return <FollowUpData />;
       case "assign":
         return <Assignlist />;
+      case "notify":
+        return <Notification />;
       case "quotations":
         return <QuotationManager />;
       case "payment":
@@ -44,7 +47,14 @@ function App() {
       <div className="flex h-screen">
         <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
         <main className="flex-1 flex flex-col overflow-hidden">
-          <Navbar userName="Andrea Pirlo" userRole="CRM Manager" />
+          {/* Pass setActiveTab AND user info */}
+          <Navbar
+            userName="Andrea Pirlo"
+            userRole="CRM Manager"
+            userEmail="andrea@example.com"
+            userContact="+91 9876543210"
+            setActiveTab={setActiveTab} 
+          />
           <div className="flex-1 p-6 overflow-auto bg-[#ebedfa] rounded-2xl mb-4 mr-4">
             {renderContent()}
           </div>

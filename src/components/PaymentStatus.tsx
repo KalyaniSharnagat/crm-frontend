@@ -196,9 +196,8 @@ const Payments: React.FC = () => {
                     <thead className="bg-white/20 sticky top-0">
                         <tr>
                             <th className="px-4 py-2 text-left font-semibold text-gray-700">Sr. No</th>
-                            <th className="px-4 py-2 text-left font-semibold text-gray-700">Quotation ID</th>
+                             <th className="px-4 py-2 text-left font-semibold text-gray-700">Project Name</th>
                             <th className="px-4 py-2 text-left font-semibold text-gray-700">Client Name</th>
-                            <th className="px-4 py-2 text-left font-semibold text-gray-700">Project Name</th>
                             <th className="px-4 py-2 text-left font-semibold text-gray-700">Payment Method</th>
                             <th className="px-4 py-2 text-left font-semibold text-gray-700">Installments</th>
                             <th className="px-4 py-2 text-left font-semibold text-gray-700">Paid</th>
@@ -212,9 +211,8 @@ const Payments: React.FC = () => {
                         {payments.map((payment, index) => (
                             <tr key={payment.id} className="hover:bg-gray-50">
                                 <td className="px-4 py-2">{index + 1}</td>
-                                <td className="px-4 py-2">{payment.paymentQuotation}</td>
-                                <td className="px-4 py-2">{payment.clientName}</td>
                                 <td className="px-4 py-2">{payment.projectName}</td>
+                                <td className="px-4 py-2">{payment.clientName}</td>                             
                                 <td className="px-4 py-2">{payment.mode}</td>
                                 <td className="px-4 py-2">{payment.installmentCount}</td>
                                 <td className="px-4 py-2">{payment.paidCount}</td>
@@ -259,18 +257,21 @@ const Payments: React.FC = () => {
 
                         <div className="p-6 space-y-4">
                             <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Quotation ID</label>
+                                 <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">Project Name</label>
                                     <input
                                         type="text"
-                                        value={formData.paymentQuotation}
-                                        onChange={(e) => setFormData({ ...formData, paymentQuotation: e.target.value })}
-                                        className={`w-full border px-3 py-2 outline-none focus:ring-2 ${errors.paymentQuotation ? "border-red-500 focus:ring-red-500" : "focus:ring-teal-500"
+                                        value={formData.projectName}
+                                        onChange={(e) => setFormData({ ...formData, projectName: e.target.value })}
+                                        className={`w-full border px-3 py-2 outline-none focus:ring-2 ${errors.projectName ? "border-red-500 focus:ring-red-500" : "focus:ring-teal-500"
                                             }`}
                                     />
-                                    {errors.paymentQuotation && <p className="text-red-500 text-xs mt-1">{errors.paymentQuotation}</p>}
+                                    {errors.projectName && <p className="text-red-500 text-xs mt-1">{errors.projectName}</p>}
                                 </div>
 
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Client Name</label>
                                     <input
@@ -281,20 +282,6 @@ const Payments: React.FC = () => {
                                             }`}
                                     />
                                     {errors.clientName && <p className="text-red-500 text-xs mt-1">{errors.clientName}</p>}
-                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Project Name</label>
-                                    <input
-                                        type="text"
-                                        value={formData.projectName}
-                                        onChange={(e) => setFormData({ ...formData, projectName: e.target.value })}
-                                        className={`w-full border px-3 py-2 outline-none focus:ring-2 ${errors.projectName ? "border-red-500 focus:ring-red-500" : "focus:ring-teal-500"
-                                            }`}
-                                    />
-                                    {errors.projectName && <p className="text-red-500 text-xs mt-1">{errors.projectName}</p>}
                                 </div>
 
                                 <div>

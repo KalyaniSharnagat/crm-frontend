@@ -20,7 +20,7 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'user', label: 'User Management', icon: User },
     { id: 'leads', label: 'Lead Management', icon: Users },
-    { id: 'quotations', label:'Quotation Log', icon: FileText },
+    // { id: 'quotations', label:'Quotation Log', icon: FileText },
     { id: 'payment', label: 'Payment Status', icon: Banknote },
   ];
 

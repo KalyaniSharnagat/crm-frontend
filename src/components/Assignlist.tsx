@@ -185,31 +185,35 @@ export default function assignManagement({ setActiveTab }: assignManagementProps
             <span>Add assign</span>
           </button>
           {/* Pagination */}
-      <div className="flex justify-center items-center space-x-2 ">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed shadow-sm transition-transform transform hover:scale-105"
-        >
-          Prev
-        </button>
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i + 1}
-            onClick={() => handlePageChange(i + 1)}
-            className={`px-4 py-2 rounded-lg shadow-sm transition-all duration-200 transform hover:scale-105 ${currentPage === i + 1 ? "bg-teal-600 text-white font-semibold shadow-lg" : "bg-white text-gray-700 hover:bg-teal-100"}`}
-          >
-            {i + 1}
-          </button>
-        ))}
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed shadow-sm transition-transform transform hover:scale-105"
-        >
-          Next
-        </button>
-      </div>
+          <div className="flex justify-center items-center space-x-3">
+            {/* First Page */}
+            <button
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:bg-gray-200 disabled:text-gray-400 shadow-sm transition-all transform hover:scale-105"
+            >
+              First
+            </button>
+
+            {/* Current Page */}
+            <span className="px-5 py-2 rounded-lg bg-teal-600 text-white font-semibold shadow-md">
+              {currentPage}
+            </span>
+            <p>OF</p>
+            {/* Last Page */}
+            <span className="px-5 py-2 rounded-lg bg-gray-50 text-gray-700 border border-gray-300 shadow-sm">
+              {totalPages}
+            </span>
+
+            {/* Last Page Button */}
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:bg-gray-200 disabled:text-gray-400 shadow-sm transition-all transform hover:scale-105"
+            >
+              Last
+            </button>
+          </div>
         </div>
       </div>
 
@@ -232,12 +236,12 @@ export default function assignManagement({ setActiveTab }: assignManagementProps
               currentassigns.map((assign, index) => (
                 <tr key={assign.id} className="hover:bg-gray-50">
                   <td className="px-4 py-3">{indexOfFirstassign + index + 1}</td>
-                  <td className="px-6 py-3"  onClick={() => setActiveTab("follow")}>{assign.clientName}</td>
+                  <td className="px-6 py-3" onClick={() => setActiveTab("follow")}>{assign.clientName}</td>
                   <td className="px-6 py-3">{assign.contact}</td>
                   <td className="px-6 py-3">{assign.email}</td>
                   <td className="px-6 py-3">{assign.projectName}</td>
                   <td className="px-6 py-3">{assign.assigntask}</td>
-                 
+
                   <td className="px-6 py-3">
                     <div className="flex items-center space-x-2">
                       <button className="text-teal-600" onClick={() => handleEditassign(assign)}>
@@ -249,7 +253,7 @@ export default function assignManagement({ setActiveTab }: assignManagementProps
                       <button className="text-red-600" onClick={() => handleDeleteassign(assign)}>
                         <Trash2 size={22} />
                       </button>
-                       
+
                     </div>
                   </td>
                 </tr>
@@ -318,7 +322,7 @@ export default function assignManagement({ setActiveTab }: assignManagementProps
                 type="text"
                 placeholder="Assign Task"
                 value={formData.assigntask}
-                onChange={(e) => setFormData({ ...formData, assigntask:(e.target.value) })}
+                onChange={(e) => setFormData({ ...formData, assigntask: (e.target.value) })}
                 className={`w-full border px-3 py-2 rounded-lg ${errors.assigntask ? "border-red-500" : ""}`}
               />
               {errors.assigntask && <p className="text-red-500 text-sm">{errors.assigntask}</p>}

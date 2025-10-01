@@ -99,53 +99,53 @@ export default function Navbar({ userName, userRole, userEmail, userContact, set
         </div>
       </div>
 
-     {isProfileModalOpen && (
-  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-    <div className="bg-white rounded-2xl w-[350px] shadow-xl relative p-6">
-      
-      {/* Gradient background circle effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-orange-400 rounded-2xl -z-10" />
+      {isProfileModalOpen && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl w-[350px] shadow-xl relative p-6">
 
-      {/* Profile Image Placeholder */}
-      <div className="flex justify-center -mt-16 mb-4">
-        <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-md">
-          <div className="w-20 h-20 bg-gradient-to-r from-teal-500 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-            {userName.split(' ').map(n => n[0]).join('')}
+            {/* Gradient background circle effect */}
+            <div className="absolute inset-0 bg-gradient-to-r from-pink-500 to-orange-400 rounded-2xl -z-10" />
+
+            {/* Profile Image Placeholder */}
+            <div className="flex justify-center -mt-16 mb-4">
+              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-md">
+                <div className="w-20 h-20 bg-gradient-to-r from-teal-500 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                  {userName.split(' ').map(n => n[0]).join('')}
+                </div>
+              </div>
+            </div>
+
+            {/* User Info */}
+            <div className="text-center">
+              <h2 className="text-xl font-semibold text-gray-800">{userName}</h2>
+              <p className="text-sm text-gray-600">{userRole}</p>
+            </div>
+
+            {/* Contact Info */}
+
+            <div className="mt-4 space-y-2 px-4">
+
+
+              <div className="flex items-center space-x-2 text-sm text-gray-700">
+                <Mail className="w-4 h-4 text-teal-600" />
+                <span>{userEmail}</span>
+              </div>
+              <div className="flex items-center space-x-2 text-sm text-gray-700">
+                <Phone className="w-4 h-4 text-teal-600" />
+                <span>{userContact}</span>
+              </div>
+            </div>
+
+            {/* Close Button */}
+            <button
+              onClick={() => setIsProfileModalOpen(false)}
+              className="mt-6 w-full bg-teal-600 hover:bg-teal-600 text-white py-2 rounded-xl transition-colors"
+            >
+              Close
+            </button>
           </div>
         </div>
-      </div>
-
-      {/* User Info */}
-      <div className="text-center">
-        <h2 className="text-xl font-semibold text-gray-800">{userName}</h2>
-        <p className="text-sm text-gray-600">{userRole}</p>
-      </div>
-
-      {/* Contact Info */}
-
-      <div className="mt-4 space-y-2 px-4">
-
-
-        <div className="flex items-center space-x-2 text-sm text-gray-700">
-          <Mail className="w-4 h-4 text-teal-600" />
-          <span>{userEmail}</span>
-        </div>
-        <div className="flex items-center space-x-2 text-sm text-gray-700">
-          <Phone className="w-4 h-4 text-teal-600" />
-          <span>{userContact}</span>
-        </div>
-      </div>
-
-      {/* Close Button */}
-      <button
-        onClick={() => setIsProfileModalOpen(false)}
-        className="mt-6 w-full bg-teal-600 hover:bg-teal-600 text-white py-2 rounded-xl transition-colors"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-)}
+      )}
 
     </nav>
   );

@@ -1,10 +1,10 @@
 import React from 'react';
-import { 
-  LayoutDashboard, 
-  Users, 
-  FileText, 
-  BarChart3, 
-  User, 
+import {
+  LayoutDashboard,
+  Users,
+  FileText,
+  BarChart3,
+  User,
   Calendar,
   Banknote,
   Settings
@@ -32,22 +32,21 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
         <div className="mb-12">
           <h1 className="text-2xl font-bold text-gray-800">CRM Project</h1>
         </div>
-        
+
         {/* Menu Items */}
         <nav className="space-y-2">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
-            
+
             return (
               <button
                 key={item.id}
                 onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                  isActive 
-                    ? 'bg-[#278f9b] text-white shadow-lg' 
+                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
+                    ? 'bg-[#278f9b] text-white shadow-lg'
                     : 'text-gray-700 hover:bg-white/30'
-                }`}
+                  }`}
               >
                 <Icon size={20} />
                 <span className="font-medium">{item.label}</span>

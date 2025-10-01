@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 
 interface LoginProps {
-  onLogin: () => void;  // ✅ Login success pe call hone wala function
+  onLogin: () => void; 
 }
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {

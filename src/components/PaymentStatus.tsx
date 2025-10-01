@@ -162,29 +162,33 @@ const Payments: React.FC = () => {
                     </button>
 
                     {/* Pagination */}
-                    <div className="flex justify-center items-center space-x-2 ">
+                    <div className="flex justify-center items-center space-x-3">
+                        {/* First Page */}
                         <button
-                            onClick={() => handlePageChange(currentPage - 1)}
+                            onClick={() => handlePageChange(1)}
                             disabled={currentPage === 1}
-                            className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed shadow-sm transition-transform transform hover:scale-105"
+                            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:bg-gray-200 disabled:text-gray-400 shadow-sm transition-all transform hover:scale-105"
                         >
-                            Prev
+                            First
                         </button>
-                        {Array.from({ length: totalPages }, (_, i) => (
-                            <button
-                                key={i + 1}
-                                onClick={() => handlePageChange(i + 1)}
-                                className={`px-4 py-2 rounded-lg shadow-sm transition-all duration-200 transform hover:scale-105 ${currentPage === i + 1 ? "bg-teal-600 text-white font-semibold shadow-lg" : "bg-white text-gray-700 hover:bg-teal-100"}`}
-                            >
-                                {i + 1}
-                            </button>
-                        ))}
+
+                        {/* Current Page */}
+                        <span className="px-5 py-2 rounded-lg bg-teal-600 text-white font-semibold shadow-md">
+                            {currentPage}
+                        </span>
+                        <p>OF</p>
+                        {/* Last Page */}
+                        <span className="px-5 py-2 rounded-lg bg-gray-50 text-gray-700 border border-gray-300 shadow-sm">
+                            {totalPages}
+                        </span>
+
+                        {/* Last Page Button */}
                         <button
-                            onClick={() => handlePageChange(currentPage + 1)}
+                            onClick={() => handlePageChange(totalPages)}
                             disabled={currentPage === totalPages}
-                            className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed shadow-sm transition-transform transform hover:scale-105"
+                            className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:bg-gray-200 disabled:text-gray-400 shadow-sm transition-all transform hover:scale-105"
                         >
-                            Next
+                            Last
                         </button>
                     </div>
                 </div>
@@ -196,7 +200,7 @@ const Payments: React.FC = () => {
                     <thead className="bg-white/20 sticky top-0">
                         <tr>
                             <th className="px-4 py-2 text-left font-semibold text-gray-700">Sr. No</th>
-                             <th className="px-4 py-2 text-left font-semibold text-gray-700">Project Name</th>
+                            <th className="px-4 py-2 text-left font-semibold text-gray-700">Project Name</th>
                             <th className="px-4 py-2 text-left font-semibold text-gray-700">Client Name</th>
                             <th className="px-4 py-2 text-left font-semibold text-gray-700">Payment Method</th>
                             <th className="px-4 py-2 text-left font-semibold text-gray-700">Installments</th>
@@ -212,7 +216,7 @@ const Payments: React.FC = () => {
                             <tr key={payment.id} className="hover:bg-gray-50">
                                 <td className="px-4 py-2">{index + 1}</td>
                                 <td className="px-4 py-2">{payment.projectName}</td>
-                                <td className="px-4 py-2">{payment.clientName}</td>                             
+                                <td className="px-4 py-2">{payment.clientName}</td>
                                 <td className="px-4 py-2">{payment.mode}</td>
                                 <td className="px-4 py-2">{payment.installmentCount}</td>
                                 <td className="px-4 py-2">{payment.paidCount}</td>
@@ -257,7 +261,7 @@ const Payments: React.FC = () => {
 
                         <div className="p-6 space-y-4">
                             <div className="grid grid-cols-2 gap-4">
-                                 <div>
+                                <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-1">Project Name</label>
                                     <input
                                         type="text"

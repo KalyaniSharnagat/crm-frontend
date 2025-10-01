@@ -133,32 +133,36 @@ export default function UserManagement({ setActiveTab }: UserManagementProps) {
           >
             <Plus size={20} /> <span>Add User</span>
           </button>
-           {/* Pagination */}
-      <div className="flex justify-center items-center space-x-2 ">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed shadow-sm transition-transform transform hover:scale-105"
-        >
-          Prev
-        </button>
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i + 1}
-            onClick={() => handlePageChange(i + 1)}
-            className={`px-4 py-2 rounded-lg shadow-sm transition-all duration-200 transform hover:scale-105 ${currentPage === i + 1 ? "bg-teal-600 text-white font-semibold shadow-lg" : "bg-white text-gray-700 hover:bg-teal-100"}`}
-          >
-            {i + 1}
-          </button>
-        ))}
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed shadow-sm transition-transform transform hover:scale-105"
-        >
-          Next
-        </button>
-      </div>
+          {/* Pagination */}
+          <div className="flex justify-center items-center space-x-3">
+            {/* First Page */}
+            <button
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:bg-gray-200 disabled:text-gray-400 shadow-sm transition-all transform hover:scale-105"
+            >
+              First
+            </button>
+
+            {/* Current Page */}
+            <span className="px-5 py-2 rounded-lg bg-teal-600 text-white font-semibold shadow-md">
+              {currentPage}
+            </span>
+            <p>OF</p>
+            {/* Last Page */}
+            <span className="px-5 py-2 rounded-lg bg-gray-50 text-gray-700 border border-gray-300 shadow-sm">
+              {totalPages}
+            </span>
+
+            {/* Last Page Button */}
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:bg-gray-200 disabled:text-gray-400 shadow-sm transition-all transform hover:scale-105"
+            >
+              Last
+            </button>
+          </div>
         </div>
       </div>
 

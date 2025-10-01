@@ -63,25 +63,25 @@ export default function LeadManagement() {
     email: '',
   });
 
-   // Search & Pagination
-    const [searchQuery, setSearchQuery] = useState("");
-    const [currentPage, setCurrentPage] = useState(1);
-    const leadsPerPage = 5;
-  
-    const filteredLeads = leads.filter((lead) =>
-      [lead.clientName, lead.email, lead.projectName].join(" ")
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
-    );
-  
-    const totalPages = Math.max(Math.ceil(filteredLeads.length / leadsPerPage), 1);
-    const indexOfLastLead = currentPage * leadsPerPage;
-    const indexOfFirstLead = indexOfLastLead - leadsPerPage;
-    const currentLeads = filteredLeads.slice(indexOfFirstLead, indexOfLastLead);
-  
-    const handlePageChange = (page: number) => {
-      if (page >= 1 && page <= totalPages) setCurrentPage(page);
-    };
+  // Search & Pagination
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const leadsPerPage = 5;
+
+  const filteredLeads = leads.filter((lead) =>
+    [lead.clientName, lead.email, lead.projectName].join(" ")
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase())
+  );
+
+  const totalPages = Math.max(Math.ceil(filteredLeads.length / leadsPerPage), 1);
+  const indexOfLastLead = currentPage * leadsPerPage;
+  const indexOfFirstLead = indexOfLastLead - leadsPerPage;
+  const currentLeads = filteredLeads.slice(indexOfFirstLead, indexOfLastLead);
+
+  const handlePageChange = (page: number) => {
+    if (page >= 1 && page <= totalPages) setCurrentPage(page);
+  };
 
   // Add Lead
   const handleAddLead = () => {
@@ -169,8 +169,8 @@ export default function LeadManagement() {
           <h2 className="text-2xl font-bold text-gray-800">Follow Up Management</h2>
           <p className="text-gray-600 mt-1">Create, edit and manage Follow Up Data</p>
         </div>
-           <div className="flex flex-col md:flex-row md:items-center gap-3 w-full md:w-auto">
-         {/* Search */}
+        <div className="flex flex-col md:flex-row md:items-center gap-3 w-full md:w-auto">
+          {/* Search */}
           <div className="relative flex-1 md:flex-none">
             <Search className="absolute left-3 top-3 text-gray-500" size={18} />
             <input
@@ -185,39 +185,46 @@ export default function LeadManagement() {
             />
           </div>
 
-        <button
-          onClick={handleAddLead}
-          className="bg-teal-600 text-white px-6 py-3 rounded-xl hover:bg-teal-700 transition-colors flex items-center space-x-2 font-medium"
-        >
-          <Plus size={20} />
-          <span>Add Follow-Up</span>
-        </button>
-          <div className="flex justify-center items-center space-x-2 ">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed shadow-sm transition-transform transform hover:scale-105"
-        >
-          Prev
-        </button>
-        {Array.from({ length: totalPages }, (_, i) => (
           <button
-            key={i + 1}
-            onClick={() => handlePageChange(i + 1)}
-            className={`px-4 py-2 rounded-lg shadow-sm transition-all duration-200 transform hover:scale-105 ${currentPage === i + 1 ? "bg-teal-600 text-white font-semibold shadow-lg" : "bg-white text-gray-700 hover:bg-teal-100"}`}
+            onClick={handleAddLead}
+            className="bg-teal-600 text-white px-6 py-3 rounded-xl hover:bg-teal-700 transition-colors flex items-center space-x-2 font-medium"
           >
-            {i + 1}
+            <Plus size={20} />
+            <span>Add Follow-Up</span>
           </button>
-        ))}
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 disabled:bg-gray-100 disabled:cursor-not-allowed shadow-sm transition-transform transform hover:scale-105"
-        >
-          Next
-        </button>
-      </div>
-      </div>
+
+
+          {/* Pagination */}
+          <div className="flex justify-center items-center space-x-3">
+            {/* First Page */}
+            <button
+              onClick={() => handlePageChange(1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:bg-gray-200 disabled:text-gray-400 shadow-sm transition-all transform hover:scale-105"
+            >
+              First
+            </button>
+
+            {/* Current Page */}
+            <span className="px-5 py-2 rounded-lg bg-teal-600 text-white font-semibold shadow-md">
+              {currentPage}
+            </span>
+            <p>OF</p>
+            {/* Last Page */}
+            <span className="px-5 py-2 rounded-lg bg-gray-50 text-gray-700 border border-gray-300 shadow-sm">
+              {totalPages}
+            </span>
+
+            {/* Last Page Button */}
+            <button
+              onClick={() => handlePageChange(totalPages)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:bg-gray-200 disabled:text-gray-400 shadow-sm transition-all transform hover:scale-105"
+            >
+              Last
+            </button>
+          </div>
+        </div>
       </div>
 
       {/* Table */}
